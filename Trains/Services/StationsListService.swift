@@ -9,10 +9,10 @@ import OpenAPIRuntime
 import OpenAPIURLSession
 import Foundation
 
-typealias Stations = Components.Schemas.AllStationsResponse
+typealias AllStations = Components.Schemas.AllStationsResponse
 
 protocol StationsListServiceProtocol {
-    func getAllStations() async throws -> Stations
+    func getAllStations() async throws -> AllStations
 }
 
 final class StationsListService: StationsListServiceProtocol {
@@ -24,9 +24,16 @@ final class StationsListService: StationsListServiceProtocol {
         self.apikey = apikey
     }
     
-    func getAllStations() async throws -> Stations {
+    func getAllStations() async throws -> AllStations {
         let response = try await client.getAllStations(query: .init(apikey: apikey))
         
-        return try response.ok.body.json
+        let responseBody = try response.ok.body.html
+                
+        let limit = 50 * 1024 * 1024
+        let fullData = try await Data(collecting: responseBody, upTo: limit)
+        
+        let allStations = try JSONDecoder().decode(AllStations.self, from: fullData)
+        
+        return allStations
     }
 }

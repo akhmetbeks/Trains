@@ -21,7 +21,9 @@ struct ContentView: View {
         }
         .padding()
         .onAppear {
-            
+            callService { client in
+                try await testThread(client: client)
+            }
         }
     }
 }
@@ -30,7 +32,7 @@ struct ContentView: View {
     ContentView()
 }
 
-func testNearestStations() {
+func callService(completion: @escaping (Client) async throws -> Void) {
     Task {
         do {
             let client = Client(
@@ -38,32 +40,81 @@ func testNearestStations() {
                 transport: URLSessionTransport()
             )
             
-            let service = NearestStationsService(client: client, apikey: apiKey)
-            
-            let response = try await service.getNearestStations(lat: 59.864177, lng: 30.319163, distance: 50)
-            
-            print(response.stations?.compactMap({ $0.code }) as Any)
+            try await completion(client)
         } catch {
             print(error.localizedDescription)
         }
     }
 }
 
-func testScheduleBetweenStations() {
-    Task {
-        do {
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            
-            let service = ScheduleService(client: client, apikey: apiKey)
-            
-            let response = try await service.getSchedule(of: "")
-            
-            print(response.?.compactMap({ $0.code }) as Any)
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
+// MARK: - Nearest Stations Service
+func testNearestStations(client: Client) async throws {
+    let service = NearestStationsService(client: client, apikey: apiKey)
+    
+    let response = try await service.getNearestStations(lat: 59.864177, lng: 30.319163, distance: 50)
+    
+    print(response.stations?.compactMap({ $0.code }) as Any)
+}
+
+// MARK: - Stations List Service
+func testAllStations(client: Client) async throws {
+    let service = StationsListService(client: client, apikey: apiKey)
+    
+    let response = try await service.getAllStations()
+    
+    print(response.countries?.compactMap(\.codes?.yandex_code) as Any)
+}
+
+// MARK: - Copyright Service
+func testCopyright(client: Client) async throws {
+    let service = CopyrightService(client: client, apikey: apiKey)
+    
+    let response = try await service.getCopyright()
+    
+    print(response.copyright as Any)
+}
+
+// MARK: - Nearest Settlement Service
+func testNearestSettlement(client: Client) async throws {
+    let service = NearestSettlementService(client: client, apikey: apiKey)
+    
+    let response = try await service.getNearestCity(lat: 43.2619, lng: 76.9295)
+    
+    print(response as Any)
+}
+
+// MARK: - Carrier Service
+func testCarrier(client: Client) async throws {
+    let service = CarrierService(client: client, apikey: apiKey)
+    
+    let response = try await service.getCarrierInfo(of: "680")
+    
+    print(response as Any)
+}
+
+// MARK: - Schedule Service
+func testSchedule(client: Client) async throws {
+    let service = ScheduleService(client: client, apikey: apiKey)
+    
+    let response = try await service.getSchedule(of: "s9600213")
+    
+    print(response.schedule?.compactMap(\.terminal) as Any)
+}
+
+// MARK: - Search Service
+func testSearch(client: Client) async throws {
+    let service = SearchService(client: client, apikey: apiKey)
+    
+    let response = try await service.getSchedualBetweenStations(from: "c146", to: "c213")
+    
+    print(response.segments as Any)
+}
+
+// MARK: - Thread Service
+func testThread(client: Client) async throws {
+    let service = ThreadStationsService(client: client, apikey: apiKey)
+    
+    let response = try await service.getRouteStations(of: "098S_3_2")
+    
+    print(response as Any)
 }

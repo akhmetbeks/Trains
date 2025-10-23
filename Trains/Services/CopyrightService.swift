@@ -7,7 +7,6 @@
 
 import OpenAPIRuntime
 import OpenAPIURLSession
-import Foundation
 
 typealias Copyright = Components.Schemas.CopyrightResponse
 

@@ -422,7 +422,7 @@ paths:
         "200":
           description: Успешный ответ
           content:
-            application/json:
+            text/html:
               schema:
                 $ref: '#/components/schemas/AllStationsResponse'
   /v3.0/copyright/:
@@ -514,11 +514,9 @@ components:
           $ref: '#/components/schemas/Station'
         departure:
           type: string
-          format: date-time
           description: Время отправления
         arrival:
           type: string
-          format: date-time
           description: Время прибытия
         thread:
           $ref: '#/components/schemas/Thread'
@@ -560,6 +558,7 @@ components:
         lng:
           type: number
           description: Долгота станции
+          
         station_type:
           type: string
           description: Тип станции
@@ -622,11 +621,9 @@ components:
           description: Дни, когда рейс не выполняется
         arrival:
           type: string
-          format: date-time
           description: Время прибытия в формате ISO 8601
         departure:
           type: string
-          format: date-time
           description: Время отправления в формате ISO 8601
         thread:
           $ref: '#/components/schemas/Thread'
@@ -715,10 +712,8 @@ components:
       properties:
         arrival:
           type: string
-          format: date-time
         departure:
           type: string
-          format: date-time
         stop_time:
           type: integer
           description: Продолжительность остановки в секундах
@@ -762,11 +757,9 @@ components:
               description: Частота рейсов
             begin_time:
               type: string
-              format: date-time
               description: Время начала
             end_time:
               type: string
-              format: date-time
               description: Время окончания
     Directions:
       type: object
@@ -783,6 +776,9 @@ components:
         date:
           type: string
           description: Дата расписания
+        event:
+          type: string
+          description: Тип события — departure/arrival
         pagination:
           $ref: '#/components/schemas/Pagination'
         station:
@@ -795,6 +791,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/IntervalSchedule'
+          default: []
         directions:
           type: array
           items:
@@ -809,11 +806,9 @@ components:
           description: Периодичность рейсов
         begin_time:
           type: string
-          format: date-time
           description: Время начала рейсов
         end_time:
           type: string
-          format: date-time
           description: Время окончания рейсов
     ThreadStationsResponse:
       type: object
@@ -872,6 +867,8 @@ components:
         carriers:
           type: array
           items:
+            $ref: '#/components/schemas/Carrier'
+        carrier:
             $ref: '#/components/schemas/Carrier'
     AllStationsResponse:
       type: object
