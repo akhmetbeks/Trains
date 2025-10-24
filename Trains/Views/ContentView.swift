@@ -9,6 +9,7 @@ import SwiftUI
 import OpenAPIURLSession
 import OpenAPIRuntime
 
+let apikey = "edab6524-aec5-4536-8f2b-b730c80b4da5"
 struct ContentView: View {
     var body: some View {
         VStack {
@@ -20,8 +21,7 @@ struct ContentView: View {
         .padding()
         .onAppear {
             callService { client in
-                let apiKey = "edab6524-aec5-4536-8f2b-b730c80b4da5"
-                try await testThread(client: client, apikey: apiKey)
+                try await testThread(client: client)
             }
         }
     }
@@ -47,7 +47,7 @@ func callService(completion: @escaping (Client) async throws -> Void) {
 }
 
 // MARK: - Nearest Stations Service
-func testNearestStations(client: Client, apikey: String) async throws {
+private func testNearestStations(client: Client) async throws {
     let service = NearestStationsService(client: client, apikey: apikey)
     
     let response = try await service.getNearestStations(lat: 59.864177, lng: 30.319163, distance: 50)
@@ -56,7 +56,7 @@ func testNearestStations(client: Client, apikey: String) async throws {
 }
 
 // MARK: - Stations List Service
-func testAllStations(client: Client, apikey: String) async throws {
+private func testAllStations(client: Client) async throws {
     let service = StationsListService(client: client, apikey: apikey)
     
     let response = try await service.getAllStations()
@@ -65,7 +65,7 @@ func testAllStations(client: Client, apikey: String) async throws {
 }
 
 // MARK: - Copyright Service
-func testCopyright(client: Client, apikey: String) async throws {
+private func testCopyright(client: Client) async throws {
     let service = CopyrightService(client: client, apikey: apikey)
     
     let response = try await service.getCopyright()
@@ -74,7 +74,7 @@ func testCopyright(client: Client, apikey: String) async throws {
 }
 
 // MARK: - Nearest Settlement Service
-func testNearestSettlement(client: Client, apikey: String) async throws {
+private func testNearestSettlement(client: Client) async throws {
     let service = NearestSettlementService(client: client, apikey: apikey)
     
     let response = try await service.getNearestCity(lat: 43.2619, lng: 76.9295)
@@ -83,7 +83,7 @@ func testNearestSettlement(client: Client, apikey: String) async throws {
 }
 
 // MARK: - Carrier Service
-func testCarrier(client: Client, apikey: String) async throws {
+private func testCarrier(client: Client) async throws {
     let service = CarrierService(client: client, apikey: apikey)
     
     let response = try await service.getCarrierInfo(of: "680")
@@ -92,7 +92,7 @@ func testCarrier(client: Client, apikey: String) async throws {
 }
 
 // MARK: - Schedule Service
-func testSchedule(client: Client, apikey: String) async throws {
+private func testSchedule(client: Client) async throws {
     let service = ScheduleService(client: client, apikey: apikey)
     
     let response = try await service.getSchedule(of: "s9600213")
@@ -101,7 +101,7 @@ func testSchedule(client: Client, apikey: String) async throws {
 }
 
 // MARK: - Search Service
-func testSearch(client: Client, apikey: String) async throws {
+private func testSearch(client: Client) async throws {
     let service = SearchService(client: client, apikey: apikey)
     
     let response = try await service.getSchedualBetweenStations(from: "c146", to: "c213")
@@ -110,7 +110,7 @@ func testSearch(client: Client, apikey: String) async throws {
 }
 
 // MARK: - Thread Service
-func testThread(client: Client, apikey: String) async throws {
+private func testThread(client: Client) async throws {
     let service = ThreadStationsService(client: client, apikey: apikey)
     
     let response = try await service.getRouteStations(of: "098S_3_2")
