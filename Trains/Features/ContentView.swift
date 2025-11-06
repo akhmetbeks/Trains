@@ -11,19 +11,11 @@ import OpenAPIRuntime
 
 let apikey = "edab6524-aec5-4536-8f2b-b730c80b4da5"
 struct ContentView: View {
+    @StateObject private var router = Router()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-        .onAppear {
-            callService { client in
-                try await testThread(client: client)
-            }
-        }
+        TabBarView()
+            .environmentObject(router)
     }
 }
 
@@ -106,6 +98,7 @@ private func testSearch(client: Client) async throws {
     
     let response = try await service.getSchedualBetweenStations(from: "c146", to: "c213")
     
+    print(response.interval_segments as Any)
     print(response.segments as Any)
 }
 

@@ -9,6 +9,7 @@ import OpenAPIRuntime
 import OpenAPIURLSession
 
 typealias Segments = Components.Schemas.Segments
+typealias Segment = Components.Schemas.Segment
 
 protocol SearchServiceProtocol {
     func getSchedualBetweenStations(from: String, to: String) async throws -> Segments
