@@ -8,10 +8,11 @@
 import OpenAPIRuntime
 import OpenAPIURLSession
 
-typealias Carrier = Components.Schemas.CarrierResponse
+typealias CarrierResponse = Components.Schemas.CarrierResponse
+typealias Carrier = Components.Schemas.Carrier
 
 protocol CarrierServiceProtocol {
-    func getCarrierInfo(of code: String) async throws -> Carrier
+    func getCarrierInfo(of code: String) async throws -> CarrierResponse
 }
 
 final class CarrierService: CarrierServiceProtocol {
@@ -23,7 +24,7 @@ final class CarrierService: CarrierServiceProtocol {
         self.apikey = apikey
     }
     
-    func getCarrierInfo(of code: String) async throws -> Carrier {
+    func getCarrierInfo(of code: String) async throws -> CarrierResponse {
         let response = try await client.getCarrierInfo(query: .init(apikey: apikey, code: code))
 
         return try response.ok.body.json

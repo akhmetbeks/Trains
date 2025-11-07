@@ -10,6 +10,12 @@ import SwiftUI
 struct SegmentView: View {
     var segment: Segment
     var formatter: DateFormatter
+    func formatTime(_ time: String?) -> String {
+        guard let time = time else { return "-" }
+        let components = time.split(separator: ":")
+        guard components.count >= 2 else { return time }
+        return "\(components[0]):\(components[1])"
+    }
     
     var body: some View {
         let hours = {
@@ -18,8 +24,8 @@ struct SegmentView: View {
         
         VStack {
             HStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.appGray)
+                CustomAsyncImage(url: segment.thread?.carrier?.logo)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                     .frame(width: 38, height: 38)
                     .padding(.trailing, 8)
                 
@@ -32,16 +38,17 @@ struct SegmentView: View {
             .padding(.bottom, 14)
             
             HStack {
-                Text(segment.departure ?? "-")
-                Text("-")
-                    .frame(width: .infinity)
+                Text(formatTime(segment.departure))
+                Rectangle()
+                    .fill(.appGray)
+                    .frame(width: 60, height: 1)
                 Text("\(hours) часов")
                     .font(.system(size: 12))
-                Text("-")
-                    .frame(width: .infinity)
-                Text(segment.arrival ?? "-")
+                Rectangle()
+                    .fill(.appGray)
+                    .frame(width: 60, height: 1)
+                Text(formatTime(segment.arrival))
             }
-            .frame(width: .infinity)
         }
         .padding(14)
         .background(.appLightGray)
@@ -49,3 +56,5 @@ struct SegmentView: View {
         .clipShape(RoundedRectangle(cornerRadius: 24))
     }
 }
+
+

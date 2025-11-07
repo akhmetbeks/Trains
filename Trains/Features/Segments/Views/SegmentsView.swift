@@ -15,27 +15,38 @@ struct SegmentsView: View {
     private let formatter = DateFormatter()
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            VStack(alignment: .leading) {
-                Text("\(from) → \(to)")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundStyle(.appBlack)
-                    .padding(.bottom, 8)
-                
-                ScrollView {
-                    LazyVStack {
-                        ForEach(vm.segments, id: \.self) { segment in
-                            SegmentView(segment: segment, formatter: formatter)
+        VStack {
+            Text("\(from) → \(to)")
+                .font(.system(size: 24, weight: .bold))
+                .foregroundStyle(.appBlack)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, 8)
+            
+            ZStack(alignment: .bottom) {
+                if vm.segments.isEmpty {
+                    Text("Вариантов нет")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(.appBlack)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .multilineTextAlignment(.center)
+                } else {
+                    ScrollView {
+                        LazyVStack {
+                            ForEach(vm.segments, id: \.self) { segment in
+                                SegmentView(segment: segment, formatter: formatter)
+                            }
                         }
+                        .padding(.bottom, 70)
                     }
                 }
-            }
-            
-            CustomButton(title: "Уточнить время") {
-                router.push(.filter)
+                
+                CustomButton(title: "Уточнить время") {
+                    router.push(.filter)
+                }
             }
         }
         .padding(16)
+        .background(.appWhite)
         .task {
             try? await vm.fetchSchedule(from: "c146", to: "c213")
         }
@@ -44,4 +55,5 @@ struct SegmentsView: View {
 
 #Preview {
     SegmentsView(from: "Симферополь", to: "Алматы")
+        .environmentObject(Router())
 }

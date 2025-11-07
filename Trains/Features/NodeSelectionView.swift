@@ -21,12 +21,11 @@ struct NodeSelectionView: View {
     }
     
     var body: some View {
-        LazyVStack {
+        List {
             if filteredList.isEmpty {
                 Text(type.noResult)
                     .font(.system(size: 24, weight: .bold))
                     .frame(maxWidth: .infinity, alignment: .center)
-                    .listRowSeparator(.hidden)
             } else {
                 ForEach(filteredList, id: \.self) { city in
                     HStack {
@@ -36,14 +35,17 @@ struct NodeSelectionView: View {
                         Image(systemName: "chevron.forward")
                             .foregroundColor(.appBlack)
                     }
-                    .padding(.vertical, 8)
+                    .padding(.vertical, 15)
+                    .contentShape(Rectangle())
                     .onTapGesture {
                         select(city)
                     }
                     .listRowSeparator(.hidden)
+                    .background(Color(.appWhite))
                 }
             }
         }
+        .background(Color(.appWhite))
         .listStyle(.plain)
         .navigationTitle(type.title)
         .navigationBarTitleDisplayMode(.inline)
@@ -72,4 +74,6 @@ struct NodeSelectionView: View {
 
 #Preview {
     NodeSelectionView(type: .fromCity)
+        .environmentObject(Router())
+        .environment(HomeViewModel())
 }

@@ -8,21 +8,39 @@
 import SwiftUI
 
 struct TabBarView: View {
+    @EnvironmentObject private var router: Router
+    @State private var vm = HomeViewModel()
+    
     var body: some View {
-        TabView {
-            HomeView()
-                .tabItem {
-                    Label("", image: .schedule)
+        NavigationStack(path: $router.path) {
+            TabView {
+                HomeView()
+                    .tabItem {
+                        Label("", image: .schedule)
+                    }
+                    .environment(vm)
+                Text("Settings")
+                    .tabItem {
+                        Label("", image: .settings)
+                    }
+            }
+            .background(.appWhite)
+            .navigationDestination(for: Route.self) { route in
+                switch route {
+                case .node(let type):
+                    NodeSelectionView(type: type)
+                        .environment(vm)
+                case .search(let from, let to):
+                    SegmentsView(from: from, to: to)
+                case .filter:
+                    FilterView()
                 }
-            Text("Settings")
-                .tabItem {
-                    Label("", image: .settings)
-                }
+            }
         }
-        .background(.appWhite)
     }
 }
 
 #Preview {
     TabBarView()
+        .environmentObject(Router())
 }

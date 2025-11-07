@@ -21,9 +21,7 @@ final class SegmentsViewModel {
                 )
                 
                 let service = SearchService(client: client, apikey: apikey)
-                
                 let response = try await service.getSchedualBetweenStations(from: from, to: to)
-                
                 segments = response.segments ?? []
             } catch {
                 print(error.localizedDescription)

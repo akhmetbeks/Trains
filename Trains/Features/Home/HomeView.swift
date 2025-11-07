@@ -8,43 +8,29 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var vm = HomeViewModel()
     @EnvironmentObject private var router: Router
+    @Environment(HomeViewModel.self) private var vm
     
     var body: some View {
-        NavigationStack(path: $router.path) {
-            VStack {
-                SearchView()
-                    .padding(.horizontal, 16)
-                    .padding(.top, 20)
-                    .environment(vm)
-                
-                if vm.findEnabled {
-                    CustomButton(title: "Найти") {
-                        router.push(.search(
-                            from: vm.fromDisplay ?? "",
-                            to: vm.toDisplay ?? ""
-                        ))
-                    }
-                    .padding(.horizontal, 112.5)
+        VStack {
+            SearchView()
+                .padding(.horizontal, 16)
+                .padding(.top, 20)
+                .environment(vm)
+            
+            if vm.findEnabled {
+                CustomButton(title: "Найти") {
+                    router.push(.search(
+                        from: vm.fromDisplay ?? "",
+                        to: vm.toDisplay ?? ""
+                    ))
                 }
-                
-                Spacer()
+                .padding(.horizontal, 112.5)
             }
-            .background(.appWhite)
-            .navigationDestination(for: Route.self) { route in
-                switch route {
-                case .node(let type):
-                    NodeSelectionView(type: type)
-                        .environment(vm)
-                case .search(let from, let to):
-                    SegmentsView(from: from, to: to)
-                case .filter:
-                    
-                }
-                
-            }
+            
+            Spacer()
         }
+        .background(.appWhite)
     }
 }
 
@@ -99,5 +85,7 @@ struct RouteButton: View {
 
 #Preview {
     HomeView()
+        .environmentObject(Router())
+        .environment(HomeViewModel())
 }
 

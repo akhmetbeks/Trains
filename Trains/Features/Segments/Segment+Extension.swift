@@ -4,6 +4,7 @@
 //
 //  Created by Sultan Akhmetbek on 06.11.2025.
 //
+import Foundation
 
 extension Segment {
     func startDateToString(formatter: DateFormatter) -> String {

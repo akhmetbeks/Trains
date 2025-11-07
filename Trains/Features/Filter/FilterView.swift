@@ -9,35 +9,27 @@ import SwiftUI
 
 struct FilterView: View {
     @State private var selectedFilters: Set<Filter> = []
+    @State private var showStops = false
+    @EnvironmentObject private var router: Router
     
     var body: some View {
-        VStack {
-            Text("Время отправки")
-                .font(.system(size: 24, weight: .bold))
-                .padding(.vertical, 16)
+        VStack(alignment: .leading) {
+            FilterTimeView(selectedFilters: $selectedFilters)
             
-            List {
-                ForEach(Filter.allCases) { filter in
-                    Toggle(isOn: Binding(
-                        get: { selectedFilters.contains(filter) },
-                        set: { value in
-                            if selectedFilters.contains(filter) {
-                                selectedFilters.remove(filter)
-                            } else {
-                                selectedFilters.insert(filter)
-                            }
-                        })
-                    ) {
-                        Text(filter.rawValue)
-                    }
-                }
+            FilterStopsView(showStops: $showStops)
+            
+            Spacer()
+            
+            CustomButton(title: "Применить") {
+                router.pop()
             }
         }
-        .foregroundStyle(.appBlack)
         .padding(16)
+        .background(.appWhite)
     }
 }
 
 #Preview {
     FilterView()
+        .environmentObject(Router())
 }
