@@ -25,7 +25,8 @@ struct NodeSelectionView: View {
             if filteredList.isEmpty {
                 Text(type.noResult)
                     .font(.system(size: 24, weight: .bold))
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .listRowSeparator(.hidden)
             } else {
                 ForEach(filteredList, id: \.self) { city in
                     HStack {
@@ -41,12 +42,13 @@ struct NodeSelectionView: View {
                         select(city)
                     }
                     .listRowSeparator(.hidden)
-                    .background(Color(.appWhite))
+                    .listRowBackground(Color.clear) 
                 }
             }
         }
-        .background(Color(.appWhite))
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(Color(.appWhite))
         .navigationTitle(type.title)
         .navigationBarTitleDisplayMode(.inline)
         .searchable(text: $searchText, prompt: "Введите запрос")
