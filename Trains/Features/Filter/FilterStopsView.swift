@@ -8,35 +8,30 @@
 import SwiftUI
 
 struct FilterStopsView: View {
-    @Binding var showStops: Bool
+    @Binding var stopOption: Filter.Stop
     
     var body: some View {
         Text("Показывать варианты с пересадками")
             .font(.system(size: 24, weight: .bold))
             .padding(.vertical, 16)
         
-        Toggle(isOn: Binding(
-            get: { showStops },
-            set: { newValue in
-                if newValue { showStops = true }
-            })
-        ) {
-            Text("Да")
+        VStack {
+            ForEach(Filter.Stop.allCases, id: \.self) { option in
+                Toggle(isOn: Binding(
+                    get: { stopOption == option },
+                    set: { newValue in
+                        if newValue { stopOption = option }
+                    })
+                ) {
+                    Text(option.rawValue)
+                }
+                .padding(.vertical, 15)
+                .toggleStyle(CustomRadio())
+            }
         }
-        .toggleStyle(CustomRadio())
-
-        Toggle(isOn: Binding(
-            get: { !showStops },
-            set: { newValue in
-                if newValue { showStops = false }
-            })
-        ) {
-            Text("Нет")
-        }
-        .toggleStyle(CustomRadio())
     }
 }
 
 #Preview {
-    FilterStopsView(showStops: .constant(true))
+    FilterStopsView(stopOption: .constant(.no))
 }

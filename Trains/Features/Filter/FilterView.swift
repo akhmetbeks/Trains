@@ -8,24 +8,25 @@
 import SwiftUI
 
 struct FilterView: View {
-    @State private var selectedFilters: Set<Filter> = []
-    @State private var showStops = false
+    @State private var selectedFilters: Set<Filter.Time> = []
+    @State private var stopOption: Filter.Stop = .no
     @EnvironmentObject private var router: Router
     
     var body: some View {
         VStack(alignment: .leading) {
             FilterTimeView(selectedFilters: $selectedFilters)
             
-            FilterStopsView(showStops: $showStops)
+            FilterStopsView(stopOption: $stopOption)
             
             Spacer()
             
-            CustomButton(title: "Применить") {
+            CustomButton(title: "Применить", maxWidth: .infinity) {
                 router.pop()
             }
         }
         .padding(16)
         .background(.appWhite)
+        .customBackButton()
     }
 }
 

@@ -40,7 +40,7 @@ struct SegmentsView: View {
                     }
                 }
                 
-                CustomButton(title: "Уточнить время") {
+                CustomButton(title: "Уточнить время", maxWidth: .infinity) {
                     router.push(.filter)
                 }
             }
@@ -50,6 +50,7 @@ struct SegmentsView: View {
         .task {
             try? await vm.fetchSchedule(from: "c146", to: "c213")
         }
+        .customBackButton()
     }
 }
 

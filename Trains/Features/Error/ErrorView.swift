@@ -1,18 +1,20 @@
 //
-//  NoInternetView.swift
+//  ErrorView.swift
 //  Trains
 //
-//  Created by Sultan Akhmetbek on 08.11.2025.
+//  Created by Sultan Akhmetbek on 11.11.2025.
 //
 
 import SwiftUI
 
-struct NoInternetView: View {
+struct ErrorView: View {
+    var type: ErrorType
+    
     var body: some View {
         VStack(alignment: .center) {
-            Image(.noInternet)
+            Image(type.image)
                 .padding(.bottom, 16)
-            Text("Нет интернета")
+            Text(type.title)
                 .font(.system(size: 24, weight: .bold))
                 .foregroundStyle(.appBlack)
         }
@@ -22,5 +24,5 @@ struct NoInternetView: View {
 }
 
 #Preview {
-    NoInternetView()
+    ErrorView(type: .noInternet)
 }

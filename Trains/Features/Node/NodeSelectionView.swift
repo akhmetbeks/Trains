@@ -1,0 +1,83 @@
+//
+//  SwiftUIView.swift
+//  Trains
+//
+//  Created by Sultan Akhmetbek on 04.11.2025.
+//
+
+import SwiftUI
+
+struct NodeSelectionView: View {
+    var type: Route.Node
+    
+    @EnvironmentObject private var router: Router
+    @Environment(HomeViewModel.self) private var vm
+    
+    @State private var nodeVM = NodeViewModel()
+    
+    var body: some View {
+        List {
+            switch nodeVM.state {
+            case .empty:
+                Text(type.noResult)
+                    .font(.system(size: 24, weight: .bold))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .listRowSeparator(.hidden)
+            case .loading:
+                ProgressView()
+            case .data(let items):
+                ForEach(items, id: \.self) { city in
+                    HStack {
+                        Text(city)
+                            .font(.system(size: 17, weight: .regular))
+                        Spacer()
+                        Image(.chevron)
+                            .foregroundColor(.appBlack)
+                    }
+                    .padding(.vertical, 15)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        select(city)
+                    }
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+                }
+            }
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(Color(.appWhite))
+        .navigationTitle(type.title)
+        .customBackButton()
+        .navigationBarTitleDisplayMode(.inline)
+        .searchable(text: $nodeVM.searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Введите запрос")
+        .onAppear {
+            nodeVM.filter("", isCity: type.isCity)
+        }
+    }
+    
+    private func select(_ item: String) {
+        switch type {
+        case .fromCity:
+            vm.fromCity = item
+            router.push(.node(.fromStation))
+        case .fromStation:
+            vm.fromStation = item
+        case .toCity:
+            vm.toCity = item
+            router.push(.node(.toStation))
+        case .toStation:
+            vm.toStation = item
+        }
+        
+        if !type.isCity {
+            router.popToRoot()
+        }
+    }
+}
+
+#Preview {
+    NodeSelectionView(type: .fromCity)
+        .environmentObject(Router())
+        .environment(HomeViewModel())
+}

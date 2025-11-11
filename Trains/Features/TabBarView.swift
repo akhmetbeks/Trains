@@ -25,6 +25,11 @@ struct TabBarView: View {
                     }
             }
             .background(.appWhite)
+            .safeAreaInset(edge: .bottom, content: {
+                Divider()
+                    .foregroundStyle(.black)
+                    .padding(.bottom, 49)
+            })
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .node(let type):

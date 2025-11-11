@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FilterTimeView: View {
-    @Binding var selectedFilters: Set<Filter>
+    @Binding var selectedFilters: Set<Filter.Time>
     
     var body: some View {
         Text("Время отправления")
@@ -16,7 +16,7 @@ struct FilterTimeView: View {
             .padding(.vertical, 16)
         
         VStack {
-            ForEach(Filter.allCases) { filter in
+            ForEach(Filter.Time.allCases) { filter in
                 Toggle(isOn: Binding(
                     get: { selectedFilters.contains(filter) },
                     set: { value in
