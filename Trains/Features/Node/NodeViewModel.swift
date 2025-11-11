@@ -16,8 +16,25 @@ enum NodeListState {
 
 @Observable
 final class NodeViewModel {
+    var isCity: Bool
+
     var searchText: String = ""
-    var state: NodeListState = .empty
+    var state: NodeListState {
+        let items = isCity ? cities : stations
+        guard !searchText.isEmpty else {
+            return .data(items)
+        }
+        
+        let filtered = items.filter({
+            $0.localizedCaseInsensitiveContains(searchText)
+        })
+        
+        return filtered.isEmpty ? .empty : .data(filtered)
+    }
+    
+    init(isCity: Bool) {
+        self.isCity = isCity
+    }
     
     let stations = ["Алматы-1", "Алматы-2", "Астана", "Шымкент",
                   "Караганда", "Павлодар", "Костанай", "Актобе",
@@ -35,18 +52,8 @@ final class NodeViewModel {
                   "Экибастуз", "Темиртау", "Рудный", "Щучинск",
                   "Сарыагаш", "Кульсары"]
     
-    func filter(_ text: String, isCity: Bool) {
-        let items = isCity ? cities : stations
-        guard !text.isEmpty else {
-            state = .data(items)
-            return
-        }
+    func filter(_ text: String) {
         
-        let filtered = items.filter({
-            $0.localizedCaseInsensitiveContains(text)
-        })
-        
-        state = filtered.isEmpty ? .empty : .data(filtered)
     }
     
 }

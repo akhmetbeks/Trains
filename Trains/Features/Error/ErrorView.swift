@@ -24,5 +24,8 @@ struct ErrorView: View {
 }
 
 #Preview {
-    ErrorView(type: .noInternet)
+    Group {
+        ErrorView(type: .noInternet)
+        ErrorView(type: .serverError)
+    }
 }

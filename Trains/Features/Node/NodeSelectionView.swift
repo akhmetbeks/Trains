@@ -13,7 +13,12 @@ struct NodeSelectionView: View {
     @EnvironmentObject private var router: Router
     @Environment(HomeViewModel.self) private var vm
     
-    @State private var nodeVM = NodeViewModel()
+    @State private var nodeVM: NodeViewModel
+    
+    init(type: Route.Node) {
+        self.type = type
+        _nodeVM = State(initialValue: NodeViewModel(isCity: type.isCity))
+    }
     
     var body: some View {
         List {
@@ -51,9 +56,6 @@ struct NodeSelectionView: View {
         .customBackButton()
         .navigationBarTitleDisplayMode(.inline)
         .searchable(text: $nodeVM.searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Введите запрос")
-        .onAppear {
-            nodeVM.filter("", isCity: type.isCity)
-        }
     }
     
     private func select(_ item: String) {
