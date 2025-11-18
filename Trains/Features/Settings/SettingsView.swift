@@ -38,6 +38,7 @@ struct SettingsView: View {
             
         }
         .padding(16)
+        .background(.appWhite)
         .foregroundStyle(.appBlack)
         .customBackButton()
         .animation(.easeInOut(duration: 0.35), value: darkMode)
@@ -46,4 +47,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
+        .environmentObject(Router())
 }

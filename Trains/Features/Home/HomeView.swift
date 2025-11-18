@@ -13,6 +13,10 @@ struct HomeView: View {
     
     var body: some View {
         VStack {
+            StoriesStackView()
+                .padding(.top, 24)
+                .padding(.bottom, 44)
+            
             SearchView()
                 .padding(.horizontal, 16)
                 .padding(.top, 20)

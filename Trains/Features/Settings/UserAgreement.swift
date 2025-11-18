@@ -30,6 +30,7 @@ struct UserAgreement: View {
             }
         }
         .padding(16)
+        .background(.appWhite)
         .foregroundStyle(.appBlack)
         .navigationTitle("Пользовательское соглашение")
         .navigationBarTitleDisplayMode(.inline)
