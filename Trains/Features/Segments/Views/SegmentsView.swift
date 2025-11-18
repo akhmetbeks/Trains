@@ -34,6 +34,12 @@ struct SegmentsView: View {
                         LazyVStack {
                             ForEach(vm.segments, id: \.self) { segment in
                                 SegmentView(segment: segment, formatter: formatter)
+                                    .onTapGesture {
+                                        guard let carrier = segment.thread?.carrier else {
+                                            return
+                                        }
+                                        router.push(.carrier(carrier))
+                                    }
                             }
                         }
                         .padding(.bottom, 70)

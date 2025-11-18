@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct TrainsApp: App {
+    @AppStorage(Constants.darkMode) private var darkMode = false
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(darkMode ? .dark : .light)
         }
     }
 }

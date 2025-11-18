@@ -19,7 +19,7 @@ struct TabBarView: View {
                         Label("", image: .schedule)
                     }
                     .environment(vm)
-                Text("Settings")
+                SettingsView()
                     .tabItem {
                         Label("", image: .settings)
                     }
@@ -39,6 +39,10 @@ struct TabBarView: View {
                     SegmentsView(from: from, to: to)
                 case .filter:
                     FilterView()
+                case .carrier(let carrier):
+                    CarrierView(carrier: carrier)
+                case .agreement:
+                    UserAgreement()
                 }
             }
         }
