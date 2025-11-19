@@ -9,6 +9,8 @@ import SwiftUI
 
 struct StoriesStackView: View {
     @StateObject private var viewModel = StoriesViewModel()
+    @EnvironmentObject private var router: Router
+    @State private var showStory = false
     
     var body: some View {
         ScrollView(.horizontal) {
@@ -16,7 +18,11 @@ struct StoriesStackView: View {
                 ForEach(viewModel.stories) { item in
                     StoryCellView(item: item)
                         .onTapGesture {
-                            viewModel.select(item)
+                            viewModel.select(by: item.id)
+                            showStory = true
+                        }
+                        .fullScreenCover(isPresented: $showStory) {
+                            StoryTabBarView(viewModel: viewModel)
                         }
                 }
             }

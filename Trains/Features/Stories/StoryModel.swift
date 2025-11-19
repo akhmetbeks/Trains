@@ -6,11 +6,23 @@
 //
 
 import UIKit
+import Combine
 
-struct StoryModel: Identifiable {
+struct StoryModel: Identifiable, Hashable {
     let id = UUID()
     let title: String
     let subtitle: String
     let image: ImageResource
     var isSeen: Bool = false
+    var active: Bool = false
+}
+
+final class StoryModelItem: ObservableObject, Identifiable {
+    @Published var model: StoryModel
+    
+    init(model: StoryModel) {
+        self.model = model
+    }
+    
+    var id: UUID { model.id }
 }
