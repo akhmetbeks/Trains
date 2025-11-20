@@ -14,7 +14,6 @@ struct StoryModel: Identifiable, Hashable {
     let subtitle: String
     let image: ImageResource
     var isSeen: Bool = false
-    var active: Bool = false
 }
 
 final class StoryModelItem: ObservableObject, Identifiable {

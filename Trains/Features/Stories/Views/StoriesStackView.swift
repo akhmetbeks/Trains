@@ -18,7 +18,7 @@ struct StoriesStackView: View {
                 ForEach(viewModel.stories) { item in
                     StoryCellView(item: item)
                         .onTapGesture {
-                            viewModel.select(by: item.id)
+                            viewModel.selectStory(with: item.id)
                             showStory = true
                         }
                         .fullScreenCover(isPresented: $showStory) {

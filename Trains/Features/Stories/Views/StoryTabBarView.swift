@@ -11,27 +11,27 @@ struct StoryTabBarView: View {
     @ObservedObject var viewModel: StoriesViewModel
     
     var body: some View {
-        TabView(selection: viewModel.selectedStory) {
-            ForEach(viewModel.stories) { item in
-                StoryView(
-                    item: item.model,
-                    progress: $viewModel.progress
-                )
-                    .tag(item.id)
-                    .onAppear {
-                        viewModel.select(by: item.id)
-                    }
-                    .onReceive(viewModel.timer) { _ in
-                        viewModel.timerTick()
-                    }
-                    .onTapGesture {
-                        viewModel.nextStory()
-                        viewModel.resetTimer()
-                    }
+        TabView(selection: Binding(
+            get: { viewModel.currentIndex },
+            set: { id in viewModel.currentIndex = id }
+        ))
+            {
+                ForEach(0..<viewModel.stories.count, id: \.self) { index in
+                    StoryView(viewModel: viewModel)
+                        .tag(index)
             }
         }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .background(.black)
+            .onChange(of: viewModel.currentIndex, { oldValue, newValue in
+                viewModel.nextStory(at: newValue)
+            })
+            .onReceive(viewModel.timer) { _ in
+                viewModel.timerTick()
+            }
+            .onTapGesture {
+                viewModel.nextStory()
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .background(.black)
     }
 }
 

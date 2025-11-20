@@ -13,28 +13,31 @@ extension CGFloat {
 }
 
 struct ProgressBarView: View {
+    var currentIndex: Int
     var count: Int
     var progress: CGFloat
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: .progressBarCornerRadius)
-                    .frame(width: geometry.size.width, height: .progressBarHeight)
-                    .foregroundStyle(.white)
-                
-                RoundedRectangle(cornerRadius: .progressBarCornerRadius)
-                    .frame(
-                        width: min(
-                            progress * geometry.size.width,
-                            geometry.size.width
-                        ),
-                        height: .progressBarHeight
-                    )
-                    .foregroundStyle(.appBlue)
-            }
-            .mask {
-                MaskProgressBarView(count: count)
+        HStack(spacing: 4) {
+            ForEach(0..<count, id: \.self) { index in
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: .progressBarCornerRadius)
+                            .foregroundStyle(.white)
+                        
+                        if index < currentIndex {
+                            RoundedRectangle(cornerRadius: .progressBarCornerRadius)
+                                .foregroundStyle(.appBlue)
+                        }
+                            
+                        if index == currentIndex {
+                            RoundedRectangle(cornerRadius: .progressBarCornerRadius)
+                                .foregroundStyle(.appBlue)
+                                .frame(width: geometry.size.width * progress)
+                        }
+                    }
+                }
+                .frame(height: .progressBarHeight)
             }
         }
     }
@@ -62,5 +65,5 @@ struct MaskBarView: View {
 }
 
 #Preview {
-    ProgressBarView(count: 3, progress: 0.5)
+    ProgressBarView(currentIndex: 1, count: 3, progress: 0.35)
 }
