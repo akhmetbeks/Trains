@@ -7,6 +7,31 @@
 
 import SwiftUI
 
+struct StoriesView: View {
+    @ObservedObject var viewModel: StoriesViewModel
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            StoryTabBarView(viewModel: viewModel)
+            
+            ProgressBarView(
+                currentIndex: viewModel.currentIndex,
+                count: viewModel.stories.count,
+                progress: viewModel.progress)
+            .padding(.top, 28)
+            .padding(.horizontal, 12)
+            
+            CloseButton()
+                .onTapGesture {
+                    dismiss()
+                }
+                .padding(.top, 50)
+                .padding(.horizontal, 12)
+        }
+    }
+}
+
 struct StoryTabBarView: View {
     @ObservedObject var viewModel: StoriesViewModel
     
@@ -17,7 +42,7 @@ struct StoryTabBarView: View {
         ))
             {
                 ForEach(0..<viewModel.stories.count, id: \.self) { index in
-                    StoryView(viewModel: viewModel)
+                    StoryView(item: viewModel.stories[index].model)
                         .tag(index)
             }
         }
@@ -32,6 +57,19 @@ struct StoryTabBarView: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .background(.black)
+    }
+}
+
+struct CloseButton: View {
+    var body: some View {
+        Image(systemName: "xmark")
+            .font(.system(size: 14, weight: .bold))
+            .padding(10)
+            .background(
+                Circle()
+                    .fill(.black)
+            )
+            .foregroundStyle(.white)
     }
 }
 

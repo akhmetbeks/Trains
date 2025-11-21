@@ -21,41 +21,44 @@ struct NodeSelectionView: View {
     }
     
     var body: some View {
-        List {
+        VStack {
+            CustomSearchBar(searchText: $nodeVM.searchText)
+            
             switch nodeVM.state {
             case .empty:
                 Text(type.noResult)
+                    .multilineTextAlignment(.center)
                     .font(.system(size: 24, weight: .bold))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                    .listRowSeparator(.hidden)
             case .loading:
                 ProgressView()
             case .data(let items):
-                ForEach(items, id: \.self) { city in
-                    HStack {
-                        Text(city)
-                            .font(.system(size: 17, weight: .regular))
-                        Spacer()
-                        Image(.chevron)
-                            .foregroundColor(.appBlack)
+                List {
+                    ForEach(items, id: \.self) { city in
+                        HStack {
+                            Text(city)
+                                .font(.system(size: 17, weight: .regular))
+                            Spacer()
+                            Image(.chevron)
+                                .foregroundColor(.appBlack)
+                        }
+                        .padding(.vertical, 15)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            select(city)
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
                     }
-                    .padding(.vertical, 15)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        select(city)
-                    }
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
                 }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
             }
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
         .background(Color(.appWhite))
         .navigationTitle(type.title)
         .customBackButton()
         .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $nodeVM.searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Введите запрос")
     }
     
     private func select(_ item: String) {

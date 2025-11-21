@@ -11,15 +11,24 @@ struct StoryCellView: View {
     @ObservedObject var item: StoryModelItem
     
     var body: some View {
-        Image(item.model.image)
-            .resizable()
-            .frame(width: 92, height: 140)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .strokeBorder(.appBlue, lineWidth: item.model.isSeen ? 0 : 4)
-            )
-            .opacity(item.model.isSeen ? 0.5 : 1.0)
+        ZStack(alignment: .bottomLeading) {
+            Image(item.model.image)
+                .resizable()
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(.appBlue, lineWidth: item.model.isSeen ? 0 : 4)
+                )
+                .opacity(item.model.isSeen ? 0.5 : 1.0)
+            
+            Text(item.model.title)
+                .lineLimit(3)
+                .font(.system(size: 12))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 8)
+                .padding(.bottom, 12)
+        }
+        .frame(width: 92, height: 140)
     }
 }
 

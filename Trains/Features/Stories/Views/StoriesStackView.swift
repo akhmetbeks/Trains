@@ -22,7 +22,7 @@ struct StoriesStackView: View {
                             showStory = true
                         }
                         .fullScreenCover(isPresented: $showStory) {
-                            StoryTabBarView(viewModel: viewModel)
+                            StoriesView(viewModel: viewModel)
                         }
                 }
             }
