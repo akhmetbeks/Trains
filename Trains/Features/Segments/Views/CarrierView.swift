@@ -11,26 +11,16 @@ struct CarrierView: View {
     var carrier: Carrier
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 16) {
             CustomAsyncImage(url: carrier.logo)
+                .clipShape(RoundedRectangle(cornerRadius: 24))
                 .frame(maxWidth: .infinity, maxHeight: 104, alignment: .center)
-                .padding(.bottom, 16)
             
             Text(carrier.title ?? "")
                 .font(.system(size: 24, weight: .bold))
-                .padding(.bottom, 16)
-                
-            Text("E-mail")
-            Text(carrier.email ?? "")
-                .font(.system(size: 12))
-                .foregroundStyle(.appBlue)
-                .padding(.bottom, 16)
             
-            Text("Телефон")
-            Text(carrier.phone ?? "")
-                .font(.system(size: 12))
-                .foregroundStyle(.appBlue)
-                .padding(.bottom, 16)
+            CarrierInfoView(title: "E-mail", value: carrier.email)
+            CarrierInfoView(title: "Телефон", value: carrier.phone)
    
             Spacer()
         }
@@ -39,6 +29,21 @@ struct CarrierView: View {
         .background(.appWhite)
         .navigationTitle("Информация о перевозчике")
         .navigationBarTitleDisplayMode(.inline)
+        .customBackButton()
+    }
+}
+
+struct CarrierInfoView: View {
+    var title: String
+    var value: String?
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(title)
+            Text(value ?? "")
+                .font(.system(size: 12))
+                .foregroundStyle(.appBlue)
+        }
     }
 }
 

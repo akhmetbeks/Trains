@@ -35,6 +35,8 @@ enum Route: Hashable {
     case node(_ type: Node)
     case search(from: String, to: String)
     case filter
+    case carrier(_ carrier: Carrier)
+    case agreement
 }
 
 extension Route.Node {
