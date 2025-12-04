@@ -14,7 +14,7 @@ protocol ScheduleServiceProtocol {
     func getSchedule(of station: String) async throws -> Schedules
 }
 
-final class ScheduleService: ScheduleServiceProtocol {
+actor ScheduleService: ScheduleServiceProtocol {
     private let client: Client
     private let apikey: String
     
@@ -29,6 +29,6 @@ final class ScheduleService: ScheduleServiceProtocol {
             station: station
         ))
         
-        return try response.ok.body.json
+        return try await response.ok.body.json
     }
 }

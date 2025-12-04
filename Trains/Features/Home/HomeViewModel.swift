@@ -7,6 +7,7 @@
 
 import Observation
 
+@MainActor
 @Observable
 final class HomeViewModel {
     var fromCity: String = ""

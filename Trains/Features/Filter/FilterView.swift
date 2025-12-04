@@ -8,15 +8,14 @@
 import SwiftUI
 
 struct FilterView: View {
-    @State private var selectedFilters: Set<Filter.Time> = []
-    @State private var stopOption: Filter.Stop = .no
+    @State private var viewModel = FilterViewModel()
     @EnvironmentObject private var router: Router
     
     var body: some View {
         VStack(alignment: .leading) {
-            FilterTimeView(selectedFilters: $selectedFilters)
+            FilterTimeView(selectedFilters: $viewModel.selectedFilters)
             
-            FilterStopsView(stopOption: $stopOption)
+            FilterStopsView(stopOption: $viewModel.stopOption)
             
             Spacer()
             

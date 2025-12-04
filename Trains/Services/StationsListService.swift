@@ -15,7 +15,7 @@ protocol StationsListServiceProtocol {
     func getAllStations() async throws -> AllStations
 }
 
-final class StationsListService: StationsListServiceProtocol {
+actor StationsListService: StationsListServiceProtocol {
     private let client: Client
     private let apikey: String
     
@@ -27,7 +27,7 @@ final class StationsListService: StationsListServiceProtocol {
     func getAllStations() async throws -> AllStations {
         let response = try await client.getAllStations(query: .init(apikey: apikey))
         
-        let responseBody = try response.ok.body.html
+        let responseBody = try await response.ok.body.html
                 
         let limit = 50 * 1024 * 1024
         let fullData = try await Data(collecting: responseBody, upTo: limit)

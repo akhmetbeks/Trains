@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StoriesStackView: View {
-    @StateObject private var viewModel = StoriesViewModel()
+    @State private var viewModel = StoriesViewModel()
     @EnvironmentObject private var router: Router
     @State private var showStory = false
     

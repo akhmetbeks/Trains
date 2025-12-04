@@ -15,7 +15,7 @@ protocol SearchServiceProtocol {
     func getSchedualBetweenStations(from: String, to: String) async throws -> Segments
 }
 
-final class SearchService: SearchServiceProtocol {
+actor SearchService: SearchServiceProtocol {
     private let client: Client
     private let apikey: String
     
@@ -31,6 +31,6 @@ final class SearchService: SearchServiceProtocol {
             to: to
         ))
         
-        return try response.ok.body.json
+        return try await response.ok.body.json
     }
 }

@@ -14,6 +14,7 @@ enum NodeListState {
     case data([String])
 }
 
+@MainActor
 @Observable
 final class NodeViewModel {
     var isCity: Bool

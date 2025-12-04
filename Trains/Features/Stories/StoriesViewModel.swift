@@ -5,22 +5,28 @@
 //  Created by Sultan Akhmetbek on 18.11.2025.
 //
 
-import Combine
 import SwiftUI
+import Combine
 
-final class StoriesViewModel: ObservableObject {
-    @Published private(set) var stories: [StoryModelItem]
-    @Published private(set) var timer: Timer.TimerPublisher
-    @Published var progress: CGFloat = 0
-    @Published var currentIndex: Int = 0
+@Observable
+final class StoriesViewModel {
+    private(set) var stories: [StoryModelItem]
+    private(set) var timer: Timer.TimerPublisher
+    var progress: CGFloat = 0
+    var currentIndex: Int = 0
     private(set) var cancellable: Cancellable?
     private(set) var progressConfig: ProgressConfiguration
     
     init() {
-        self.stories = storiesList
-        self.progressConfig = ProgressConfiguration(storiesCount: storiesList.count)
-        self.timer = Timer.publish(every: progressConfig.timerTickInternal, on: .main, in: .common)
-        self.cancellable = self.timer.connect()
+        let stories = storiesList
+        let config = ProgressConfiguration(storiesCount: stories.count)
+        let timer = Timer.publish(every: config.timerTickInternal, on: .main, in: .common)
+        let cancellable = timer.connect()
+        
+        self.stories = stories
+        self.progressConfig = config
+        self.timer = timer
+        self.cancellable = cancellable
     }
     
     deinit {
