@@ -10,33 +10,33 @@ import Observation
 @MainActor
 @Observable
 final class HomeViewModel {
-    var fromCity: String = ""
-    var fromStation: String = ""
-    var toCity: String = ""
-    var toStation: String = ""
+    var fromCity: NodeModel?
+    var fromStation: NodeModel?
+    var toCity: NodeModel?
+    var toStation: NodeModel?
     
     var fromDisplay: String? {
-        if fromCity.isEmpty && fromStation.isEmpty {
+        if fromCity == nil && fromStation == nil {
             return nil
-        } else if fromStation.isEmpty {
-            return fromCity
+        } else if fromStation == nil {
+            return fromCity?.title
         } else {
-            return "\(fromCity) (\(fromStation))"
+            return "\(fromCity?.title ?? "") (\(fromStation?.title ?? ""))"
         }
     }
     
     var toDisplay: String? {
-        if toCity.isEmpty && toStation.isEmpty {
+        if toCity == nil && toStation == nil {
             return nil
-        } else if toStation.isEmpty {
-            return toCity
+        } else if toStation == nil {
+            return toCity?.title
         } else {
-            return "\(toCity) (\(toStation))"
+            return "\(toCity?.title ?? "") (\(toStation?.title ?? ""))"
         }
     }
     
     var findEnabled: Bool {
-        !fromCity.isEmpty && !fromStation.isEmpty && !toCity.isEmpty && !toStation.isEmpty
+        fromCity != nil && fromStation != nil && toCity != nil && toStation != nil
     }
     
     func swap() {

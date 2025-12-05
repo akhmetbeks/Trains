@@ -32,11 +32,12 @@ struct TabBarView: View {
             })
             .navigationDestination(for: Route.self) { route in
                 switch route {
-                case .node(let type):
-                    NodeSelectionView(type: type)
+                case .node(let type, let region):
+                    NodeSelectionView(type: type, region: region)
                         .environment(vm)
-                case .search(let from, let to):
-                    SegmentsView(from: from, to: to)
+                case .search:
+                    SegmentsView()
+                        .environment(vm)
                 case .filter:
                     FilterView()
                 case .carrier(let carrier):

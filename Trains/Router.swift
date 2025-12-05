@@ -32,8 +32,8 @@ enum Route: Hashable {
         case toStation
     }
     
-    case node(_ type: Node)
-    case search(from: String, to: String)
+    case node(_ type: Node, region: String?)
+    case search
     case filter
     case carrier(_ carrier: Carrier)
     case agreement

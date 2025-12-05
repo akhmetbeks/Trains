@@ -8,15 +8,14 @@
 import SwiftUI
 
 struct SegmentsView: View {
-    var from: String
-    var to: String
+    @Environment(HomeViewModel.self) private var homeVM
     @EnvironmentObject private var router: Router
     @State private var vm = SegmentsViewModel()
     private let formatter = DateFormatter()
     
     var body: some View {
         VStack {
-            Text("\(from) → \(to)")
+            Text("\(homeVM.fromDisplay ?? "") → \(homeVM.toDisplay ?? "")")
                 .font(.system(size: 24, weight: .bold))
                 .foregroundStyle(.appBlack)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -54,13 +53,15 @@ struct SegmentsView: View {
         .padding(16)
         .background(.appWhite)
         .task {
-            try? await vm.fetchSchedule(from: "c146", to: "c213")
+            try? await vm.fetchSchedule(from: homeVM.fromStation?.code ?? "", to: homeVM.toStation?.code ?? "")
         }
         .customBackButton()
     }
 }
 
 #Preview {
-    SegmentsView(from: "Симферополь", to: "Алматы")
+    SegmentsView()
         .environmentObject(Router())
+        .environment(HomeViewModel())
+    
 }
