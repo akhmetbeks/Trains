@@ -5,7 +5,7 @@
 //  Created by Sultan Akhmetbek on 18.11.2025.
 //
 
-import UIKit
+import SwiftUI
 import Combine
 
 struct StoryModel: Identifiable, Sendable {

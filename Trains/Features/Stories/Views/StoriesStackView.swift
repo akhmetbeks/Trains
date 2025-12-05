@@ -22,7 +22,8 @@ struct StoriesStackView: View {
                             showStory = true
                         }
                         .fullScreenCover(isPresented: $showStory) {
-                            StoriesView(viewModel: viewModel)
+                            StoriesView()
+                                .environment(viewModel)
                         }
                 }
             }

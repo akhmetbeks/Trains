@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StoriesView: View {
-    @State var viewModel: StoriesViewModel
+    @Environment(StoriesViewModel.self) private var viewModel
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
