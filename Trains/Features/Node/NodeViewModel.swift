@@ -7,53 +7,67 @@
 
 import Observation
 import Foundation
+import OpenAPIURLSession
+import OpenAPIRuntime
 
 enum NodeListState {
     case loading
     case empty
-    case data([String])
+    case data
 }
 
+@MainActor
 @Observable
 final class NodeViewModel {
-    var isCity: Bool
-
+    private let service: StationsListService
+    var stations: [Station]?
+    var regions: [Region]?
+    var selectedRegion: String?
     var searchText: String = ""
-    var state: NodeListState {
-        let items = isCity ? cities : stations
-        guard !searchText.isEmpty else {
-            return .data(items)
+    
+    var state: NodeListState = .empty
+    
+    init(isCity: Bool, selectedRegion: String?) {
+        self.selectedRegion = selectedRegion
+        
+        let client = Client(
+            serverURL: try! Servers.Server1.url(),
+            transport: URLSessionTransport()
+        )
+        self.service = StationsListService(client: client, apikey: Constants.apikey)
+    }
+    
+    var items: [NodeModel] {
+        let base: [NodeModel] = {
+            if selectedRegion == nil {
+                return regions?.compactMap(\.asNodeItem) ?? []
+            } else {
+                return stations?.compactMap(\.asNodeItem) ?? []
+            }
+        }()
+
+        guard !searchText.isEmpty else { return base }
+
+        return base.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+    }
+    
+    func loadStationsList() async throws {
+        do {
+            state = .loading
+            let response = try await service.getAllStations()
+            let country = response.countries?.first(where: { $0.title == "Россия" })
+            
+            if selectedRegion != nil {
+                stations = country?.regions?.first(where: { $0.title == selectedRegion ?? ""})?.settlements.flatMap({ settlement in
+                    settlement.first?.stations
+                })
+                state = stations?.isEmpty == true ? .empty : .data
+            } else {
+                regions = country?.regions
+                state = regions?.isEmpty == true ? .empty : .data
+            }
+        } catch {
+            print("Error while fetching stations: \(error.localizedDescription)")
         }
-        
-        let filtered = items.filter({
-            $0.localizedCaseInsensitiveContains(searchText)
-        })
-        
-        return filtered.isEmpty ? .empty : .data(filtered)
     }
-    
-    init(isCity: Bool) {
-        self.isCity = isCity
-    }
-    
-    let stations = ["Алматы-1", "Алматы-2", "Астана", "Шымкент",
-                  "Караганда", "Павлодар", "Костанай", "Актобе",
-                  "Тараз", "Уральск", "Кокшетау", "Петропавловск",
-                  "Семей", "Өскемен", "Кызылорда", "Актау",
-                  "Атырау", "Жезказган", "Балхаш", "Туркестан",
-                  "Экибастуз", "Темиртау", "Рудный", "Щучинск",
-                  "Сарыагаш", "Кульсары"]
-    
-    let cities = [ "Алматы", "Астана", "Шымкент",
-                  "Караганда", "Павлодар", "Костанай", "Актобе",
-                  "Тараз", "Уральск", "Кокшетау", "Петропавловск",
-                  "Семей", "Өскемен", "Кызылорда", "Актау",
-                  "Атырау", "Жезказган", "Балхаш", "Туркестан",
-                  "Экибастуз", "Темиртау", "Рудный", "Щучинск",
-                  "Сарыагаш", "Кульсары"]
-    
-    func filter(_ text: String) {
-        
-    }
-    
 }

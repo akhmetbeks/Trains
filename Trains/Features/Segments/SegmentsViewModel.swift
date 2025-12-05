@@ -8,6 +8,7 @@ import Observation
 import OpenAPIURLSession
 import Foundation
 
+@MainActor
 @Observable
 final class SegmentsViewModel {
     var segments: [Segment] = []

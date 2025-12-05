@@ -14,7 +14,7 @@ protocol ThreadStationsServiceProtocol {
     func getRouteStations(of uid: String) async throws -> Thread
 }
 
-final class ThreadStationsService: ThreadStationsServiceProtocol {
+actor ThreadStationsService: ThreadStationsServiceProtocol {
     private let client: Client
     private let apikey: String
     
@@ -29,6 +29,6 @@ final class ThreadStationsService: ThreadStationsServiceProtocol {
             uid: uid
         ))
         
-        return try response.ok.body.json
+        return try await response.ok.body.json
     }
 }

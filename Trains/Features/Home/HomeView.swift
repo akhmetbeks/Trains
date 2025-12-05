@@ -24,10 +24,7 @@ struct HomeView: View {
             
             if vm.findEnabled {
                 CustomButton(title: "Найти", innerPadding: 47.5) {
-                    router.push(.search(
-                        from: vm.fromDisplay ?? "",
-                        to: vm.toDisplay ?? ""
-                    ))
+                    router.push(.search)
                 }
             }
             

@@ -15,10 +15,10 @@ struct SearchView: View {
         HStack(alignment: .center, spacing: 16) {
             VStack(alignment: .leading, spacing: 0) {
                SearchNodeButton(title: vm.fromDisplay, placeholder: "Откуда") {
-                   router.push(.node(.fromCity))
+                   router.push(.node(.fromCity, region: nil))
                }
                SearchNodeButton(title: vm.toDisplay, placeholder: "Куда") {
-                   router.push(.node(.toCity))
+                   router.push(.node(.toCity, region: nil))
                }
            }
            .clipShape(RoundedRectangle(cornerRadius: 20))

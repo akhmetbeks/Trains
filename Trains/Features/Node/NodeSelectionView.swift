@@ -9,15 +9,17 @@ import SwiftUI
 
 struct NodeSelectionView: View {
     var type: Route.Node
+    var region: String?
     
     @EnvironmentObject private var router: Router
     @Environment(HomeViewModel.self) private var vm
     
     @State private var nodeVM: NodeViewModel
     
-    init(type: Route.Node) {
+    init(type: Route.Node, region: String?) {
         self.type = type
-        _nodeVM = State(initialValue: NodeViewModel(isCity: type.isCity))
+        self.region = region
+        _nodeVM = State(initialValue: NodeViewModel(isCity: type.isCity, selectedRegion: region))
     }
     
     var body: some View {
@@ -32,11 +34,12 @@ struct NodeSelectionView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             case .loading:
                 ProgressView()
-            case .data(let items):
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            case .data:
                 List {
-                    ForEach(items, id: \.self) { city in
+                    ForEach(nodeVM.items, id: \.self) { item in
                         HStack {
-                            Text(city)
+                            Text(item.title)
                                 .font(.system(size: 17, weight: .regular))
                             Spacer()
                             Image(.chevron)
@@ -45,7 +48,7 @@ struct NodeSelectionView: View {
                         .padding(.vertical, 15)
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            select(city)
+                            select(item)
                         }
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
@@ -59,18 +62,25 @@ struct NodeSelectionView: View {
         .navigationTitle(type.title)
         .customBackButton()
         .navigationBarTitleDisplayMode(.inline)
+        .task {
+            do {
+                try await nodeVM.loadStationsList()
+            } catch {
+                print("Failed to load stations: \(error.localizedDescription)")
+            }
+        }
     }
     
-    private func select(_ item: String) {
+    private func select(_ item: NodeModel) {
         switch type {
         case .fromCity:
             vm.fromCity = item
-            router.push(.node(.fromStation))
+            router.push(.node(.fromStation, region: item.title))
         case .fromStation:
             vm.fromStation = item
         case .toCity:
             vm.toCity = item
-            router.push(.node(.toStation))
+            router.push(.node(.toStation, region: item.title))
         case .toStation:
             vm.toStation = item
         }
@@ -82,7 +92,7 @@ struct NodeSelectionView: View {
 }
 
 #Preview {
-    NodeSelectionView(type: .fromCity)
+    NodeSelectionView(type: .fromCity, region: "")
         .environmentObject(Router())
         .environment(HomeViewModel())
 }

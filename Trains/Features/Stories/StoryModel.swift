@@ -5,10 +5,10 @@
 //  Created by Sultan Akhmetbek on 18.11.2025.
 //
 
-import UIKit
+import SwiftUI
 import Combine
 
-struct StoryModel: Identifiable, Hashable {
+struct StoryModel: Identifiable, Sendable {
     let id = UUID()
     let title: String
     let subtitle: String

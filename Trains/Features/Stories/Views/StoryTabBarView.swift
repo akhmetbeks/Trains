@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StoriesView: View {
-    @ObservedObject var viewModel: StoriesViewModel
+    @Environment(StoriesViewModel.self) private var viewModel
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -33,7 +33,7 @@ struct StoriesView: View {
 }
 
 struct StoryTabBarView: View {
-    @ObservedObject var viewModel: StoriesViewModel
+    @State var viewModel: StoriesViewModel
     
     var body: some View {
         TabView(selection: Binding(

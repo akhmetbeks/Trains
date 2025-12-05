@@ -14,7 +14,7 @@ protocol NearestSettlementServiceProtocol {
     func getNearestCity(lat: Double, lng: Double) async throws -> NearestCity
 }
 
-final class NearestSettlementService: NearestSettlementServiceProtocol {
+actor NearestSettlementService: NearestSettlementServiceProtocol {
     private let client: Client
     private let apikey: String
     
@@ -29,6 +29,6 @@ final class NearestSettlementService: NearestSettlementServiceProtocol {
             lat: lat,
             lng: lng
         ))
-        return try response.ok.body.json
+        return try await response.ok.body.json
     }
 }
